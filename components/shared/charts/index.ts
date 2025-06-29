@@ -1,0 +1,1 @@
+export { ApyHistoryChart } from './ApyHistoryChart';
