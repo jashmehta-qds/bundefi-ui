@@ -13,6 +13,9 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "BunDefi - Smarter Yields",
+  icons: {
+    icon: "/logo.png",
+  },
   description: "Maximize your DeFi yields automatically across multiple protocols",
 }
 
