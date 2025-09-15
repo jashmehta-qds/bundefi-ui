@@ -78,7 +78,7 @@ export default function ElectricityEffect({
     
     // Generate start position from one of the four edges
     const edge = Math.floor(Math.random() * 4)
-    let startX, startY
+    let startX = 0, startY = 0
     
     switch (edge) {
       case 0: // top
