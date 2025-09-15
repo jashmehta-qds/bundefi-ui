@@ -285,7 +285,7 @@ const getProtocolIcon = (protocol: string): string => {
 
 const getProtocolColor = (protocol: string): string => {
   const colors: Record<string, string> = {
-    'Aave': 'from-purple-500 to-purple-700',
+    'Aave': 'from-primary-500 to-primary-700',
     'Compound': 'from-green-500 to-green-700',
     'Lido': 'from-blue-500 to-blue-700',
     'Curve': 'from-red-500 to-red-700',
@@ -312,7 +312,7 @@ const getDefaultProtocols = (networkId: number = 1): ProtocolYield[] => [
     apy: 4.2,
     token: 'ETH',
     icon: '🔷',
-    color: 'from-purple-500 to-purple-700',
+    color: 'from-primary-500 to-primary-700',
     address: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9',
     networkId,
   },

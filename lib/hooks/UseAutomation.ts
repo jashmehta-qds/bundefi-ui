@@ -48,7 +48,7 @@ export function useAutomation() {
       title: 'AI Strategy',
       description: 'AI-powered automated decision making',
       icon: Brain,
-      color: 'bg-purple-500',
+      color: 'bg-primary-500',
       examples: ['Sentiment Analysis', 'Risk Management']
     }
   ]

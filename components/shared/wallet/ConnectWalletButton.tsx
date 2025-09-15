@@ -36,7 +36,8 @@ export function ConnectWalletButton() {
 
   const handleConnect = async () => {
     try {
-      await login()
+      clearAllStates()
+      login()
       if (address) {
         // Create a transaction record when the wallet is connected
         // await createTransaction(address, 'connect', 0)
@@ -103,7 +104,7 @@ export function ConnectWalletButton() {
         <Button 
           variant="outline" 
           size="lg" 
-          className="h-10 flex items-center gap-2"
+          className="h-10 flex items-center gap-2 bg-transparent"
           onClick={() => setShowOptions(!showOptions)}
           onBlur={() => setTimeout(() => setShowOptions(false), 100)}
         >
@@ -128,7 +129,7 @@ export function ConnectWalletButton() {
   }
 
   return (
-    <Button variant="outline" size="lg" className="h-10" onClick={handleConnect}>
+    <Button variant="outline" size="lg" className="h-10 bg-primary-200/30 text-white" onClick={handleConnect}>
       <Wallet className="h-4 w-4 mr-2" />
       Connect Wallet
     </Button>

@@ -41,7 +41,7 @@ export default function YieldPositionsCard({
   const collapsedHeight = positions.length > 0 ? "360px" : "auto"
 
   return (
-    <Card className="w-full overflow-hidden">
+    <Card className="w-full overflow-hidden bg-white border-primary-700/50">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -167,9 +167,9 @@ function LoadingState() {
 // Empty state component
 function EmptyState() {
   return (
-    <div className="py-12 flex flex-col items-center justify-center text-center border-2 border-dashed border-muted rounded-lg">
+    <div className="py-12 flex flex-col items-center justify-center text-center">
       <div className="bg-muted/30 p-3 rounded-full mb-4">
-        <LineChart className="h-6 w-6 text-muted-foreground" />
+        <LineChart className="h-6 w-6 text-muted-background" />
       </div>
       <h3 className="text-lg font-medium mb-2">No Active Positions</h3>
       <p className="text-muted-foreground max-w-md mb-6">

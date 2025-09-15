@@ -19,22 +19,20 @@ export function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/90">
+    <header className="sticky top-0 z-50 w-full border-b border-secondary-200/20 backdrop-blur supports-[backdrop-filter]:bg-secondary-800/80">
       <div className="container relative flex h-16 items-center">
         {/* Logo Section */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 transition-all duration-300" />
-              <div className="relative p-2 transition-all duration-300">
-                <Image src={"/logo.png"} alt="Bundefi" width={84} height={84} />
-              </div>
+          
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+              <span className="text-xl font-bold text-white">
                 BunDefi
               </span>
-              <span className="text-xs text-muted-foreground -mt-1 hidden sm:block">
+              <span className="text-xs text-secondary-300 -mt-1 hidden sm:block">
                 Smarter Yields
               </span>
             </div>
@@ -47,8 +45,8 @@ export function SiteHeader() {
             href="/dashboard"
             className={`relative px-4 py-2 text-sm font-medium rounded-md group ${
               isActive("/dashboard")
-                ? "text-primary border-2 border-b-4 border-primary"
-                : "text-slate-600 hover:text-foreground hover:bg-accent"
+                ? "text-primary-400 border-2 border-b-4 border-primary-400"
+                : "text-secondary-300 hover:text-white hover:bg-secondary-700/30"
             }`}
           >
             <span className="relative z-10">
@@ -64,8 +62,8 @@ export function SiteHeader() {
             href="/automation"
             className={`relative px-4 py-2 text-sm font-medium rounded-md group ${
               isActive("/automation")
-                ? "text-primary border-2 border-b-4 border-primary"
-                : "text-slate-600 hover:text-foreground hover:bg-accent"
+                ? "text-primary-400 border-2 border-b-4 border-primary-400"
+                : "text-secondary-300 hover:text-white hover:bg-secondary-700/30"
             }`}
           >
             <span className="relative z-10">

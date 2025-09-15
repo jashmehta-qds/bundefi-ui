@@ -23,14 +23,6 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -39,10 +31,6 @@ const config = {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -50,6 +38,48 @@ const config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        // BunDefi Design System - Primary Colors (Blue)
+        primary: {
+          50: '#eff6ff',   // Very light blue
+          100: '#dbeafe',  // Light blue
+          200: '#bfdbfe',  // Lighter blue
+          300: '#93c5fd',  // Light blue
+          400: '#60a5fa',  // Medium light blue
+          500: '#3b82f6',  // Base blue (main primary)
+          600: '#2563eb',  // Medium blue
+          700: '#1d4ed8',  // Medium dark blue
+          800: '#1e40af',  // Dark blue
+          900: '#1e3a8a',  // Darker blue
+          950: '#172554',  // Very dark blue
+        },
+        // BunDefi Design System - Secondary Colors (Slate)
+        secondary: {
+          50: '#f8fafc',   // Very light slate
+          100: '#f1f5f9',  // Light slate
+          200: '#e2e8f0',  // Lighter slate
+          300: '#cbd5e1',  // Light slate
+          400: '#94a3b8',  // Medium light slate
+          500: '#64748b',  // Base slate
+          600: '#475569',  // Medium slate
+          700: '#334155',  // Medium dark slate
+          800: '#1e293b',  // Dark slate
+          900: '#0f172a',  // Darker slate
+          950: '#020617',  // Very dark slate
+        },
+        // BunDefi Design System - Accent Colors (Emerald for success/positive actions)
+        accent: {
+          50: '#ecfdf5',   // Very light emerald
+          100: '#d1fae5',  // Light emerald
+          200: '#a7f3d0',  // Lighter emerald
+          300: '#6ee7b7',  // Light emerald
+          400: '#34d399',  // Medium light emerald
+          500: '#10b981',  // Base emerald (main accent)
+          600: '#059669',  // Medium emerald
+          700: '#047857',  // Medium dark emerald
+          800: '#065f46',  // Dark emerald
+          900: '#064e3b',  // Darker emerald
+          950: '#022c22',  // Very dark emerald
         },
       },
       borderRadius: {

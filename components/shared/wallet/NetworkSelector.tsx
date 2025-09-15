@@ -57,7 +57,7 @@ export function NetworkSelector() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="lg" className="h-10 flex items-center gap-2">
+        <Button variant="outline" size="lg" className="h-10 flex items-center gap-2 bg-primary-200/30 text-white">
           {selectedNetwork ? (
             <>
               <motion.div
@@ -94,71 +94,84 @@ export function NetworkSelector() {
       <DropdownMenuContent
         align="end"
         className="w-[200px] p-2 bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl rounded-xl"
+        asChild
       >
-        <DropdownMenuLabel className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-2 py-1">
-          Select Network
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator className="bg-slate-100" />
-
-        <div className="space-y-1">
-          {networks.map((network) => (
-            <DropdownMenuItem
-              key={network.id}
-              onClick={() => setSelectedNetwork(network)}
-              className="p-0 focus:bg-slate-50 rounded-lg cursor-pointer"
-            >
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex items-center gap-3 w-full p-2 rounded-lg"
-              >
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium shadow-sm"
-                  style={{
-                    backgroundColor: network.color + "20",
-                    color: network.color,
-                    border: `1px solid ${network.color}40`,
-                  }}
-                >
-                  <Image
-                    src={network.logo || ""}
-                    alt={network.name}
-                    width={32}
-                    height={32}
-                  />
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-sm text-slate-900 truncate">
-                    {network.name}
-                  </div>
-                  <div className="text-xs text-slate-500">
-                     Chain {network.chainId}
-                  </div>
-                </div>
-
-                {selectedNetwork?.id === network.id && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  >
-                    <Check className="h-4 w-4 text-green-500" />
-                  </motion.div>
-                )}
-              </motion.div>
-            </DropdownMenuItem>
-          ))}
-        </div>
-
-        <DropdownMenuItem
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-          className="p-2 focus:bg-slate-50 rounded-lg cursor-pointer"
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0, y: -10 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.8, opacity: 0, y: -10 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 400, 
+            damping: 25,
+            mass: 0.8
+          }}
         >
-          <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-          Refresh Networks
-        </DropdownMenuItem>
+          <DropdownMenuLabel className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-2 py-1">
+            Select Network
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className="bg-slate-100" />
+
+          <div className="space-y-1">
+            {networks.map((network) => (
+              <DropdownMenuItem
+                key={network.id}
+                onClick={() => setSelectedNetwork(network)}
+                className="p-0 focus:bg-slate-50 rounded-lg cursor-pointer"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex items-center gap-3 w-full p-2 rounded-lg"
+                >
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium shadow-sm"
+                    style={{
+                      backgroundColor: network.color + "20",
+                      color: network.color,
+                      border: `1px solid ${network.color}40`,
+                    }}
+                  >
+                    <Image
+                      src={network.logo || ""}
+                      alt={network.name}
+                      width={32}
+                      height={32}
+                    />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-sm text-slate-900 truncate">
+                      {network.name}
+                    </div>
+                    <div className="text-xs text-slate-500">
+                       Chain {network.chainId}
+                    </div>
+                  </div>
+
+                  {selectedNetwork?.id === network.id && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    >
+                      <Check className="h-4 w-4 text-green-500" />
+                    </motion.div>
+                  )}
+                </motion.div>
+              </DropdownMenuItem>
+            ))}
+          </div>
+
+          <DropdownMenuItem
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="p-2 focus:bg-slate-50 rounded-lg cursor-pointer"
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh Networks
+          </DropdownMenuItem>
+        </motion.div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

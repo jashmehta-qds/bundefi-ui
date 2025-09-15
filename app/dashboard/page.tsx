@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 
 import { CurrentApyCard, TotalValueCard } from "@/components/features/dashboard";
 import { OptimisationManager } from "@/components/features/optimization";
+import { GridSparks } from "@/components/shared/animations";
 import YieldPositionsCard from "./YieldPositionCard";
 
 export default function Portfolio() {
@@ -84,8 +85,28 @@ export default function Portfolio() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="flex-1 bg-muted/40">
-        <div className="container py-6 md:py-8">
+      <main className="flex-1 bg-muted/40 relative">
+        {/* Grid Background */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Horizontal Lines */}
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(156, 163, 175, 0.1) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(156, 163, 175, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px'
+          }} />
+          
+          {/* GridSparks Component */}
+          <GridSparks 
+            gridSize={40}
+            sparkCount={2}
+            sparkSpeed={3}
+            sparkLifetime={1500}
+          />
+        </div>
+
+        <div className="container py-6 md:py-8 relative z-10">
           <div className="grid gap-6 md:grid-cols-2">
    
             <TotalValueCard />

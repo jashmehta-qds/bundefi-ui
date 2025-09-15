@@ -11,11 +11,12 @@ import {
   Zap
 } from "lucide-react";
 import dynamic from 'next/dynamic';
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect, useMemo } from 'react';
 
 // Dynamically import heavy components
-const HeroScrollStory = dynamic(() => import("@/components/shared/animations/HeroScrollStory"), {
-  loading: () => <div className="min-h-screen flex items-center justify-center">
+const HeroLanding = dynamic(() => import("@/components/shared/animations/HeroLanding"), {
+  ssr: false,
+  loading: () => <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-50">
     <div className="animate-pulse bg-gray-200 rounded-lg w-full h-full" />
   </div>
 });
@@ -35,21 +36,158 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 
-export default function Home() {
+// Simple loading screen component - no dynamic import to prevent flash
+function SimpleLoadingScreen({ onComplete }: { onComplete: () => void }) {
+  const [progress, setProgress] = useState(0)
+  const [isComplete, setIsComplete] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    const startTime = Date.now()
+    
+    // Simulate loading progress
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const newProgress = Math.min(prev + Math.random() * 15, 100)
+        
+        if (newProgress >= 100) {
+          clearInterval(interval)
+          
+          // Ensure minimum duration
+          const elapsed = Date.now() - startTime
+          const remaining = Math.max(0, 2000 - elapsed)
+          
+          setTimeout(() => {
+            setIsComplete(true)
+            setTimeout(onComplete, 500) // Fade out delay
+          }, remaining)
+        }
+        
+        return newProgress
+      })
+    }, 100)
+
+    return () => clearInterval(interval)
+  }, [onComplete])
+
+  // Pre-generate particle positions only on client
+  const particles = useMemo(() => {
+    if (!isClient) return []
+    
+    return [...Array(10)].map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 2}s`,
+      duration: `${2 + Math.random() * 2}s`,
+    }))
+  }, [isClient])
+
   return (
-    <div className="flex flex-col min-h-screen bg-white text-gray-900">
+    <div className={`fixed inset-0 z-50 bg-gradient-to-br from-gray-50 via-white to-gray-50 transition-opacity duration-500 ${
+      isComplete ? 'opacity-0' : 'opacity-100'
+    }`}>
+      {/* Animated background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-primary-400/10 to-primary-500/10 animate-pulse" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)] animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,rgba(96,165,250,0.05),transparent_50%)] animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }} />
+      </div>
+
+      {/* Loading content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full">
+        {/* Logo/Icon */}
+        <div className="mb-8">
+          <div className="w-20 h-20 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center animate-pulse">
+            <Zap className="h-10 w-10 text-white" />
+          </div>
+        </div>
+
+        {/* Title */}
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <span className="text-gray-900">
+            BunDefi
+          </span>
+        </h1>
+
+        {/* Subtitle */}
+        <p className="text-gray-600 text-lg mb-8 text-center max-w-md">
+          Loading cross-chain DeFi protocol...
+        </p>
+
+        {/* Progress bar */}
+        <div className="w-64 md:w-80 bg-primary-200 rounded-full h-2 mb-4">
+          <div 
+            className="bg-gradient-to-r from-primary-500 to-primary-400 h-2 rounded-full transition-all duration-300 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        {/* Progress text */}
+        <p className="text-gray-500 text-sm">
+          {Math.round(progress)}% complete
+        </p>
+
+        {/* Loading dots */}
+        <div className="flex space-x-1 mt-4">
+          <div className="w-2 h-2 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-2 h-2 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+        </div>
+      </div>
+
+      {/* Floating particles - only render on client */}
+      {isClient && (
+        <div className="absolute inset-0 overflow-hidden">
+          {particles.map((particle) => (
+            <div
+              key={particle.id}
+              className="absolute w-1 h-1 bg-primary-500/20 rounded-full animate-pulse"
+              style={{
+                left: particle.left,
+                top: particle.top,
+                animationDelay: particle.delay,
+                animationDuration: particle.duration,
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function Home() {
+  const [isLoading, setIsLoading] = useState(true)
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false)
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-primary-600 via-primary-500 to-primary-600 text-white">
+      {/* Loading Screen - rendered immediately */}
+      {isLoading && (
+        <SimpleLoadingScreen onComplete={handleLoadingComplete} />
+      )}
 
       <main className="flex-1 relative z-10">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-          <HeroScrollStory />
-        </section>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-600 via-primary-500 to-primary-600">
+          <div className="animate-pulse bg-primary-500 rounded-lg w-full h-full" />
+        </div>}>
+          <HeroLanding />
+        </Suspense>
 
         {/* Powered By Section */}
-        <section className="py-12 bg-gray-100 border-t border-gray-200 ">
+        <section className="py-12 bg-slate-700 border-t border-primary-500/50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-8">
-              <p className="text-sm text-gray-500  mb-6">
+              <p className="text-sm text-gray-300 mb-6">
                 Powered by industry-leading infrastructure
               </p>
               <div className="flex flex-col md:flex-row items-center justify-center gap-8 max-w-2xl mx-auto">
@@ -63,7 +201,7 @@ export default function Home() {
                     />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900 text-2xl">
+                    <div className="font-semibold text-white text-2xl">
                       Chainlink
                     </div>
                   </div>
@@ -78,7 +216,7 @@ export default function Home() {
                     />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900  text-2xl">
+                    <div className="font-semibold text-white text-2xl">
                       Enso
                     </div>
                   </div>
@@ -89,14 +227,14 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <Suspense fallback={<div className="animate-pulse bg-gray-100 h-96" />}>
-          <section id="features" className="py-20 bg-white">
+        <Suspense fallback={<div className="animate-pulse bg-primary-500 h-96" />}>
+          <section id="features" className="py-20 bg-primary-500">
             <div className="container mx-auto px-4">
               <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 ">
+                <h2 className="text-4xl font-bold text-white">
                   DeFi made simple
                 </h2>
-                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                <p className="text-xl text-gray-300 max-w-2xl mx-auto">
                   Everything you need assembled in one powerful interface
                 </p>
               </div>
@@ -110,117 +248,28 @@ export default function Home() {
           </section>
         </Suspense>
 
-        {/* How It Works */}
-        <section id="how-it-works" className="py-20 bg-gray-100 ">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Get started in minutes
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Experience seamless cross-chain DeFi with our intuitive platform
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-              {steps.map((step, index) => (
-                <div key={index} className="text-center relative">
-                  <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                    {index + 1}
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center mt-12">
-              <Button
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-white px-8"
-              >
-                Start Your DeFi Journey
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Use Cases */}
-        {/* <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Built for every DeFi user
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Whether you're new to DeFi or a seasoned pro, our platform
-                adapts to your needs
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {useCases.map((useCase, index) => (
-                <Card
-                  key={index}
-                  className="border-0 shadow-sm hover:shadow-md transition-shadow bg-white"
-                >
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                      {useCase.icon}
-                    </div>
-                    <CardTitle className="text-xl font-semibold text-gray-900">
-                      {useCase.title}
-                    </CardTitle>
-                    <CardDescription className="text-gray-600">
-                      {useCase.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {useCase.examples.map((example, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-start gap-2 text-sm text-gray-600"
-                        >
-                          <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                          {example}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section> */}
-
         {/* FAQ */}
-        <section className="py-20 bg-white dark:bg-[#1A1A1A]">
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="text-4xl font-bold text-white mb-4">
                 Frequently asked questions
               </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-400">
+              <p className="text-4xl font-bold text-primary-500">
                 Everything you need to know about BunDefi
               </p>
             </div>
 
             <div className="max-w-3xl mx-auto space-y-4">
               {faqs.map((faq, index) => (
-                <Card key={index} className="border border-gray-200 dark:border-[#333333] bg-white dark:bg-[#1A1A1A]">
+                <Card key={index} className="border border-primary-500/50 bg-primary-500">
                   <CardHeader>
-                    <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <CardTitle className="text-lg font-semibold text-white">
                       {faq.question}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    <p className="text-gray-300 leading-relaxed">
                       {faq.answer}
                     </p>
                   </CardContent>
@@ -231,7 +280,7 @@ export default function Home() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-20 bg-primary">
+        <section className="py-20 bg-gradient-to-r from-primary-500 to-primary-600">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-4xl font-bold text-white mb-4">
               Ready to experience cross-chain DeFi?
@@ -243,7 +292,7 @@ export default function Home() {
             <Button
               size="lg"
               variant="secondary"
-              className="bg-white text-primary hover:bg-gray-50 px-8"
+              className="bg-white text-primary-600 hover:bg-gray-50 px-8"
             >
               Get Started Free
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -261,7 +310,7 @@ const features = [
   {
     icon: (
       <Image
-        src="/chainlink-blue.svg"
+        src="/chainlink-white.svg"
         alt="Chainlink CCIP"
         width={24}
         height={24}
@@ -273,33 +322,33 @@ const features = [
       lottie: "/lotties/network.lottie",
     },
   {
-    icon: <Layers className="h-6 w-6 text-indigo-600" />,
+    icon: <Layers className="h-6 w-6 text-primary-600" />,
     title: "Intelligent Routing",
     description:
       "Enso's routing engine finds the best paths across 200+ protocols for optimal yields and lowest fees.",
     lottie: "/lotties/routing.lottie",
     },
   {
-    icon: <Shield className="h-6 w-6 text-indigo-600" />,
+    icon: <Shield className="h-6 w-6 text-primary-600" />,
     title: "Non-Custodial Security",
     description:
       "Your funds stay in your wallet. We never have access to your assets, ensuring complete security.",
       lottie: "/lotties/security.lottie",
     },
   {
-    icon: <Workflow className="h-6 w-6 text-indigo-600" />,
+    icon: <Workflow className="h-6 w-6 text-primary-600" />,
     title: "DeFi Automation",
     description:
       "Set up automated strategies with our visual builder to optimize your yields without constant monitoring.",
   },
   {
-    icon: <LineChart className="h-6 w-6 text-indigo-600" />,
+    icon: <LineChart className="h-6 w-6 text-primary-600" />,
     title: "Unified Dashboard",
     description:
       "Track all your positions, yields, and transactions across chains from one comprehensive interface.",
   },
   {
-    icon: <Users className="h-6 w-6 text-indigo-600" />,
+    icon: <Users className="h-6 w-6 text-primary-600" />,
     title: "Community Insights",
     description:
       "Access strategies and insights from our community of cross-chain DeFi enthusiasts.",
@@ -308,7 +357,7 @@ const features = [
 
 const useCases = [
   {
-    icon: <Clock className="h-6 w-6 text-indigo-600" />,
+    icon: <Clock className="h-6 w-6 text-primary-600" />,
     title: "Yield Optimization",
     description:
       "Maximize returns by accessing the best opportunities across all chains.",
@@ -320,7 +369,7 @@ const useCases = [
     ],
   },
   {
-    icon: <Zap className="h-6 w-6 text-indigo-600" />,
+    icon: <Zap className="h-6 w-6 text-primary-600" />,
     title: "Portfolio Management",
     description:
       "Manage your entire DeFi portfolio from one unified interface.",
@@ -332,7 +381,7 @@ const useCases = [
     ],
   },
   {
-    icon: <Brain className="h-6 w-6 text-indigo-600" />,
+    icon: <Brain className="h-6 w-6 text-primary-600" />,
     title: "Protocol Integration",
     description:
       "Interact with hundreds of protocols without switching interfaces.",
@@ -424,22 +473,22 @@ function FeatureCard({ feature, index }: { feature: any; index: number }) {
 
   return (
     <div
-      className="group relative cursor-pointer rounded-[32px] overflow-hidden min-h-[300px] bg-gradient-to-br from-primary/10 to-primary/10 hover:from-primary/20 hover:to-primary/20 transition-all duration-300 border border-gray-200"
+      className="group relative cursor-pointer rounded-[32px] overflow-hidden min-h-[300px] bg-white/90 backdrop-blur-sm transition-all duration-300 border border-2 border-primary-200 shadow-lg hover:shadow-xl"
     >
       <div className="relative z-10 p-8 flex flex-col h-full">
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-12 h-12 bg-gray-100 border-2 border-primary rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 bg-primary-100 border-2 border-primary-300 rounded-lg flex items-center justify-center">
             {feature.icon}
           </div>
-          <span className="text-primary text-xl font-medium">
+          <span className="text-secondary-900 text-xl font-medium">
             {feature.title}
           </span>
         </div>
-        <p className="text-gray-600 leading-relaxed text-lg">
+        <p className="text-secondary-600 leading-relaxed text-lg">
           {feature.description}
         </p>
         <div className="mt-auto pt-6">
-          <div className="flex items-center text-primary transition-opacity duration-300">
+          <div className="flex items-center text-primary-500 transition-opacity duration-300">
             {!feature.lottie && <span className="font-medium">Coming Soon...</span>}
           </div>
         </div>

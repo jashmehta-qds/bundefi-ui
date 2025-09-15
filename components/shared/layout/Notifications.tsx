@@ -110,7 +110,7 @@ export function Notifications() {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="lg" className="h-10 relative">
+        <Button variant="outline" size="lg" className="h-10 relative bg-primary-200/30 text-white">
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -120,7 +120,7 @@ export function Notifications() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
-        <div className="flex items-center justify-between p-2 border-b">
+        <div className="flex items-center justify-between p-2 border-b border-secondary-700/50">
           <h3 className="font-semibold">Notifications</h3>
           {unreadCount > 0 && (
             <Button

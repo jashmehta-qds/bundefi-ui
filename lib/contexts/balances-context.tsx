@@ -168,8 +168,8 @@ function getTokenIcon(symbol: string): string {
 
 function getTokenColor(symbol: string): string {
   const colors: Record<string, string> = {
-    ETH: "from-blue-500 to-purple-600",
-    WETH: "from-blue-500 to-purple-600",
+    ETH: "from-primary-500 to-primary-600",
+    WETH: "from-primary-500 to-primary-600",
     USDC: "from-blue-400 to-blue-600",
     USDT: "from-green-400 to-green-600",
     DAI: "from-yellow-400 to-yellow-600",

@@ -215,7 +215,7 @@ export function CurrentApyCard() {
     >
       <Card className="h-[360px] overflow-hidden shadow-md ">
         <motion.div
-          className="h-1 bg-gradient-to-r from-blue-500 via-emerald-500 to-purple-500"
+          className="h-1 bg-gradient-to-r from-primary-400 via-primary-500 to-primary-400"
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
@@ -280,10 +280,10 @@ export function CurrentApyCard() {
                 variants={itemVariants}
               >
                 <motion.div
-                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 "
+                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 "
                   variants={iconVariants as Variants}
                 >
-                  <Layers className="h-7 w-7 text-blue-500 dark:text-blue-400" />
+                  <Layers className="h-7 w-7 text-primary-500 dark:text-primary-400" />
                 </motion.div>
                 <div className="text-3xl font-bold text-center">
                   {totalPositions}
@@ -301,15 +301,15 @@ export function CurrentApyCard() {
                 variants={itemVariants}
               >
                 <motion.div
-                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 "
+                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 "
                   variants={iconVariants as Variants}
                 >
-                  <BarChart3 className="h-7 w-7 text-emerald-500 dark:text-emerald-400" />
+                  <BarChart3 className="h-7 w-7 text-primary-500 dark:text-primary-500" />
                 </motion.div>
-                <div className="text-3xl font-bold text-center text-emerald-500 dark:text-emerald-400">
+                <div className="text-3xl font-bold text-center text-primary-700 dark:text-primary-500">
                   {apy.toFixed(2)}%
                 </div>
-                <div className="text-sm text-muted-foreground text-center mt-1">
+                <div className="text-sm text-muted-background text-center mt-1">
                   Current APY
                 </div>
               </motion.div>
@@ -320,7 +320,7 @@ export function CurrentApyCard() {
                 variants={itemVariants}
               >
                 <motion.div
-                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-purple-100"
+                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-100"
                   variants={iconVariants as Variants}
                   animate={{
                     rotate: [0, 5, 0, -5, 0],
@@ -333,7 +333,7 @@ export function CurrentApyCard() {
                     delay: 1,
                   }}
                 >
-                  <Activity className="h-7 w-7 text-purple-500 dark:text-purple-400" />
+                  <Activity className="h-7 w-7 text-primary-500 dark:text-primary-400" />
                 </motion.div>
                 <div className="text-3xl font-bold text-center ">
                   ${animatedEarnings.toFixed(3)}
